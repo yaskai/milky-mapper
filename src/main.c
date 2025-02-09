@@ -89,7 +89,7 @@ int main () {
 	Spritesheet tile_sheet = MakeSpritesheet(64, 64, LoadTexture("tileset00.png"));
 
 	Camera2D cam = {
-		.target = {1920 * 0.5f, 1200 * 0.5f},
+		.target = {-ww * 0.25f, -wh * 0.25f},
 		//.offset = {1920 * 0.5f, 1200 * 0.5f},
 		.offset = {0, 0},
 		.rotation = 0.0f,
@@ -142,27 +142,27 @@ int main () {
 	bool dm_save_edit = false;
 
 	Rectangle fnew_opt = (Rectangle){FILE_OPTION_REC.x, 
-		FILE_OPTION_REC.y + (FILE_OPTION_REC.height * 2),
+		FILE_OPTION_REC.y + (FILE_OPTION_REC.height * 1),
 		FILE_OPTION_REC.width, FILE_OPTION_REC.height};
 	
 	Rectangle open_opt = (Rectangle){FILE_OPTION_REC.x, 
-		FILE_OPTION_REC.y + (FILE_OPTION_REC.height * 3),
+		FILE_OPTION_REC.y + (FILE_OPTION_REC.height * 2),
 		FILE_OPTION_REC.width, FILE_OPTION_REC.height};
 	
 	Rectangle save_opt = (Rectangle){FILE_OPTION_REC.x, 
-		FILE_OPTION_REC.y + (FILE_OPTION_REC.height * 4),
+		FILE_OPTION_REC.y + (FILE_OPTION_REC.height * 3),
 		FILE_OPTION_REC.width, FILE_OPTION_REC.height};
 	
 	Rectangle resize_opt = (Rectangle){EDIT_OPTION_REC.x, 
-		EDIT_OPTION_REC.y + (EDIT_OPTION_REC.height * 2),
+		EDIT_OPTION_REC.y + (EDIT_OPTION_REC.height * 1),
 		EDIT_OPTION_REC.width, EDIT_OPTION_REC.height};
 
 	Rectangle undo_opt = (Rectangle){EDIT_OPTION_REC.x, 
-		EDIT_OPTION_REC.y + (EDIT_OPTION_REC.height * 3),
+		EDIT_OPTION_REC.y + (EDIT_OPTION_REC.height * 2),
 		EDIT_OPTION_REC.width, EDIT_OPTION_REC.height};
 
 	Rectangle redo_opt = (Rectangle){EDIT_OPTION_REC.x, 
-		EDIT_OPTION_REC.y + (EDIT_OPTION_REC.height * 4),
+		EDIT_OPTION_REC.y + (EDIT_OPTION_REC.height * 3),
 		EDIT_OPTION_REC.width, EDIT_OPTION_REC.height};
 
 	int toggle_group_active = 0;
@@ -377,7 +377,8 @@ int main () {
 		}  
 		*/
 
-		if(GuiButton(FILE_OPTION_REC, "FILE")) {
+
+		if(GuiButton(FILE_OPTION_REC, "#01#FILE")) {
 			FILE_TAB_EDIT = ! FILE_TAB_EDIT;
 		}
 
@@ -385,34 +386,32 @@ int main () {
 			cursor.ui_cooldown = 10;
 			cursor.on_ui = true;
 
-			if(GuiButton(open_opt, "OPEN")) {
+			if(GuiButton(open_opt, "#03#OPEN")) {
 				fileDialogState.windowActive = true;
 				FILE_TAB_EDIT = false;
 			}
 
-			if(GuiButton(fnew_opt, "NEW")) {
+			if(GuiButton(fnew_opt, "#08#NEW")) {
 				NEW_FILE = true;
 				new_input = 0;
 				new_file_props[2].value.vbool = true;
 				FILE_TAB_EDIT = false;
 			}
 
-			if(GuiButton(save_opt, "SAVE")) {
+			if(GuiButton(save_opt, "#02#SAVE")) {
 				SAVE_PROMPT = true;
 				FILE_TAB_EDIT = false;
+			}
+
+			if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+				if(!CheckCollisionPointRec(GetMousePosition(),
+					(Rectangle){FILE_OPTION_REC.x, FILE_OPTION_REC.y, FILE_OPTION_REC.width, FILE_OPTION_REC.height * 4})) {
+					FILE_TAB_EDIT = false;
+				}
 			}
 		}
 
 		// EDIT...
-		/*
-		if(GuiDropdownBox(EDIT_OPTION_REC,
-		   "#EDIT;#RESIZE;#UNDO;#REDO",
-		   &TAB_EDIT_ACTIVE, EDIT_TAB_EDIT)) {
-			
-			TAB_EDIT_ACTIVE = !TAB_EDIT_ACTIVE;
-		}
-		*/
-
 		if(GuiButton(EDIT_OPTION_REC, "EDIT")) {
 			EDIT_TAB_EDIT = ! EDIT_TAB_EDIT;
 		}
@@ -422,20 +421,30 @@ int main () {
 			cursor.on_ui = true;
 
 			if(GuiButton(resize_opt, "RESIZE")) {
-			
+				if(_editor_state == MAIN) {
+					new_file_props[2].value.vbool = true;
+					RESIZE = true;
+				}
+
+				EDIT_TAB_EDIT = false;	
 			}
 
 			if(GuiButton(undo_opt, "UNDO")) {
-
+				EDIT_TAB_EDIT = false;	
 			}
 
 			if(GuiButton(redo_opt, "REDO")) {
-
+				EDIT_TAB_EDIT = false;	
+			}
+			
+			if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+				if(!CheckCollisionPointRec(GetMousePosition(),
+					(Rectangle){EDIT_OPTION_REC.x, EDIT_OPTION_REC.y, EDIT_OPTION_REC.width, EDIT_OPTION_REC.height * 3})) {
+					EDIT_TAB_EDIT = false;
+				}
 			}
 		}
 
-		//GuiSetStyle(DROPDOWNBOX, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
-		//GuiSetStyle(DROPDOWNBOX, TEXT_PADDING, 0);
 		GuiSetStyle(BUTTON, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
 		GuiSetStyle(BUTTON, TEXT_PADDING, 0);
 
