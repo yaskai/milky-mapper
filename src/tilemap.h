@@ -51,7 +51,7 @@ typedef struct {
 
 typedef struct {
 	u_int8_t flags;
-	u_int8_t action_count, action_pos;
+	u_int8_t action_count, action_index;
 	u_int16_t width, height, area;
 	u_int32_t action_max_count;
 	Vector2 tileSize;

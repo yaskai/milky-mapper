@@ -29,7 +29,7 @@ void TilemapInit(Tilemap *tilemap, Camera2D *cam, Spritesheet *ss, u_int16_t wid
 	tilemap->spr_index = (u_int8_t*)malloc(sizeof(u_int8_t));
 	
 	tilemap->action_count = 0;
-	tilemap->action_pos = 0;
+	tilemap->action_index = 0;
 	tilemap->action_max_count = INIT_MAX_ACTIONS;
 	tilemap->actions = (Action*)malloc(sizeof(Action) * INIT_MAX_ACTIONS);
 
@@ -324,7 +324,7 @@ void TilemapResize(Tilemap *tilemap, u_int16_t w, u_int16_t h, bool is_new) {
 		tilemap->mapData = realloc(tilemap->mapData, sizeof(char) * tilemap->area);
 		for(u_int16_t i = 0; i < tilemap->area; i++) tilemap->mapData[i] = '0';
 		tilemap->action_count = 0;
-		tilemap->action_pos = 0;
+		tilemap->action_index = 0;
 
 		tilemap->spr_index = realloc(tilemap->spr_index, sizeof(u_int8_t) * tilemap->area);
 		tilemap->bounds = (Rectangle){0, 0, tilemap->width * TILE_SIZE, tilemap->height * TILE_SIZE};
@@ -377,10 +377,10 @@ Action MakeAction(Coords origin, Coords dimensions) {
 }
 
 void ApplyAction(Tilemap *tilemap, Action *action) {
-	action->id = tilemap->action_pos;
+	action->id = tilemap->action_index;
 
 	tilemap->action_count++;
-	tilemap->action_pos++;
+	tilemap->action_index++;
 
 	// Grow array size if needed
 	if(tilemap->action_count == tilemap->action_max_count) {
@@ -407,13 +407,13 @@ void ApplyAction(Tilemap *tilemap, Action *action) {
 		if(InBounds(tilemap, (Coords){c, r})) tilemap->mapData[tile_index] = action->next[i];
 	}
 	
-	if(tilemap->action_pos < tilemap->action_count) {
-		for(int i = tilemap->action_pos; i < tilemap->action_count; i++) {
+	if(tilemap->action_index < tilemap->action_count) {
+		for(int i = tilemap->action_index; i < tilemap->action_count; i++) {
 			free(tilemap->actions[i].prev);
 			free(tilemap->actions[i].next);
 		}
 			
-		tilemap->action_count = tilemap->action_pos;
+		tilemap->action_count = tilemap->action_index;
 	}
 	
 	tilemap->actions[tilemap->action_count] = *action;
@@ -446,7 +446,7 @@ void UndoAction(Tilemap *tilemap, Action *action) {
 	}
 	
 	TilemapUpdateSprites(tilemap);
-	tilemap->action_pos--;
+	tilemap->action_index--;
 	tilemap->flags &= ~TM_SAVED;
 }
 
@@ -467,7 +467,7 @@ void RedoAction(Tilemap *tilemap, Action *action) {
 	}
 
 	TilemapUpdateSprites(tilemap);
-	tilemap->action_pos++;
+	tilemap->action_index++;
 	tilemap->flags &= ~TM_SAVED;
 }
 

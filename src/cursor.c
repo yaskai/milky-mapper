@@ -135,14 +135,14 @@ void CursorUpdate(Cursor *cursor) {
 		}
 
 		// Undo
-		if(IsKeyPressed(KEY_Z) && pTilemap->action_pos > 0 && cursor->ui_cooldown <= 0) {
-			UndoAction(pTilemap, &pTilemap->actions[pTilemap->action_pos]);
+		if(IsKeyPressed(KEY_Z) && pTilemap->action_index > 0 && cursor->ui_cooldown <= 0) {
+			UndoAction(pTilemap, &pTilemap->actions[pTilemap->action_index]);
 			last_click_pos = (Coords){pTilemap->width + 1, pTilemap->height + 1};
 		}
 
 		// Redo
-		if(IsKeyPressed(KEY_R) && pTilemap->action_pos < pTilemap->action_count) {
-			RedoAction(pTilemap, &pTilemap->actions[pTilemap->action_pos] + 1);
+		if(IsKeyPressed(KEY_R) && pTilemap->action_index < pTilemap->action_count) {
+			RedoAction(pTilemap, &pTilemap->actions[pTilemap->action_index] + 1);
 			last_click_pos = (Coords){pTilemap->width + 1, pTilemap->height + 1};
 		}
 
