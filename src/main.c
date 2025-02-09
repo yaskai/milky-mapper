@@ -120,6 +120,7 @@ int main () {
 	Rectangle TOOL_SELECT_REC = { 1860, 150, 40, 40 };
 	Rectangle TOOL_ERASER_REC = { 1860, 200, 40, 40 };
 	Rectangle FILE_OPTION_REC = { 0, 0, 100, 30 };
+	Rectangle EDIT_OPTION_REC = { 100, 0, 100, 30 };
 
 	Rectangle button_recs[3] = {
 		TOOL_PENCIL_REC,
@@ -131,7 +132,7 @@ int main () {
 	int TAB_FILE_ACTIVE = 0;
 	bool FILE_TAB_EDIT = false;
 
-	int EDIT_TAB_ACTIVE = 0;
+	int TAB_EDIT_ACTIVE = 0;
 	bool EDIT_TAB_EDIT = false;
 	
 	int dm_open_active = 0;
@@ -151,6 +152,18 @@ int main () {
 	Rectangle save_opt = (Rectangle){FILE_OPTION_REC.x, 
 		FILE_OPTION_REC.y + (FILE_OPTION_REC.height * 4),
 		FILE_OPTION_REC.width, FILE_OPTION_REC.height};
+	
+	Rectangle resize_opt = (Rectangle){EDIT_OPTION_REC.x, 
+		EDIT_OPTION_REC.y + (EDIT_OPTION_REC.height * 2),
+		EDIT_OPTION_REC.width, EDIT_OPTION_REC.height};
+
+	Rectangle undo_opt = (Rectangle){EDIT_OPTION_REC.x, 
+		EDIT_OPTION_REC.y + (EDIT_OPTION_REC.height * 3),
+		EDIT_OPTION_REC.width, EDIT_OPTION_REC.height};
+
+	Rectangle redo_opt = (Rectangle){EDIT_OPTION_REC.x, 
+		EDIT_OPTION_REC.y + (EDIT_OPTION_REC.height * 4),
+		EDIT_OPTION_REC.width, EDIT_OPTION_REC.height};
 
 	int toggle_group_active = 0;
 
@@ -171,7 +184,7 @@ int main () {
 	while (!WindowShouldClose()) {
 		// Update
 		cursor.on_ui = false;
-		if(fileDialogState.itemFocused && fileDialogState.windowActive || FILE_TAB_EDIT == true) cursor.on_ui = true;
+		if(fileDialogState.itemFocused && fileDialogState.windowActive) cursor.on_ui = true;
        
 		if(fileDialogState.SelectFilePressed) {
             // Load level file(if supported extension)
@@ -185,23 +198,6 @@ int main () {
 
             fileDialogState.SelectFilePressed = false;
         }
-		
-		/*
-		if(NEW_FILE) {
-			if(IsKeyPressed(KEY_TAB)) {
-				new_input++;
-				if(new_input > NAME) new_input = COLS;
-			}
-
-			if(IsKeyPressed(KEY_ENTER)) {
-				if(new_w > 0 && new_h > 0 && strcmp(fileNameToSave, "")) {
-					TilemapResize(&tilemap, new_w, new_h, true);
-					NEW_FILE = false;
-					_editor_state = MAIN;
-				}
-			}
-		}
-		*/
 
 		if(_editor_state == MAIN) {
 			// Check if hovering buttons
@@ -338,17 +334,22 @@ int main () {
                 }
 		}
 		
-		// File dropdown menu
+		// Dropdown menus
 		GuiUnlock();
-		GuiSetStyle(DROPDOWNBOX, TEXT_PADDING, 4);
-		GuiSetStyle(DROPDOWNBOX, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT);
-
+		//GuiSetStyle(DROPDOWNBOX, TEXT_PADDING, 4);
+		//GuiSetStyle(DROPDOWNBOX, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT);
+		GuiSetStyle(BUTTON, TEXT_PADDING, 4);
+		GuiSetStyle(BUTTON, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT);
+		
+		// FILE...
+		/*
         if(GuiDropdownBox(FILE_OPTION_REC,
 		   "#01#FILE;#08#NEW;#03#OPEN;#02#SAVE",
 		   &TAB_FILE_ACTIVE, FILE_TAB_EDIT)) {
 			
 			FILE_TAB_EDIT = !FILE_TAB_EDIT;
 		}
+
 
 		if(FILE_TAB_EDIT) {
 			cursor.ui_cooldown = 10;
@@ -374,10 +375,69 @@ int main () {
 				}
 			}
 		}  
-		
+		*/
 
-		GuiSetStyle(DROPDOWNBOX, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
-		GuiSetStyle(DROPDOWNBOX, TEXT_PADDING, 0);
+		if(GuiButton(FILE_OPTION_REC, "FILE")) {
+			FILE_TAB_EDIT = ! FILE_TAB_EDIT;
+		}
+
+		if(FILE_TAB_EDIT) {
+			cursor.ui_cooldown = 10;
+			cursor.on_ui = true;
+
+			if(GuiButton(open_opt, "OPEN")) {
+				fileDialogState.windowActive = true;
+				FILE_TAB_EDIT = false;
+			}
+
+			if(GuiButton(fnew_opt, "NEW")) {
+				NEW_FILE = true;
+				new_input = 0;
+				new_file_props[2].value.vbool = true;
+				FILE_TAB_EDIT = false;
+			}
+
+			if(GuiButton(save_opt, "SAVE")) {
+				SAVE_PROMPT = true;
+				FILE_TAB_EDIT = false;
+			}
+		}
+
+		// EDIT...
+		/*
+		if(GuiDropdownBox(EDIT_OPTION_REC,
+		   "#EDIT;#RESIZE;#UNDO;#REDO",
+		   &TAB_EDIT_ACTIVE, EDIT_TAB_EDIT)) {
+			
+			TAB_EDIT_ACTIVE = !TAB_EDIT_ACTIVE;
+		}
+		*/
+
+		if(GuiButton(EDIT_OPTION_REC, "EDIT")) {
+			EDIT_TAB_EDIT = ! EDIT_TAB_EDIT;
+		}
+
+		if(EDIT_TAB_EDIT) {
+			cursor.ui_cooldown = 10;
+			cursor.on_ui = true;
+
+			if(GuiButton(resize_opt, "RESIZE")) {
+			
+			}
+
+			if(GuiButton(undo_opt, "UNDO")) {
+
+			}
+
+			if(GuiButton(redo_opt, "REDO")) {
+
+			}
+		}
+
+		//GuiSetStyle(DROPDOWNBOX, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
+		//GuiSetStyle(DROPDOWNBOX, TEXT_PADDING, 0);
+		GuiSetStyle(BUTTON, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
+		GuiSetStyle(BUTTON, TEXT_PADDING, 0);
 
 		if(CheckCollisionPointRec(GetMousePosition(), FILE_OPTION_REC)) {
 			cursor.on_ui = true;
