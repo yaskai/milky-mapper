@@ -60,23 +60,7 @@ int main () {
 	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI | FLAG_FULLSCREEN_MODE);
 	
 	//printf("Monitors: %d\n", GetMonitorCount());
-	/*
-	SetTargetFPS(GetMonitorRefreshRate(GetMonitorCount() - 1));	
-	int ww = GetMonitorWidth(GetMonitorCount() - 1);
-	int wh = GetMonitorHeight(GetMonitorCount() - 1);
-	InitWindow(ww, wh, "Milk Editor");
-	HideCursor();
-	*/
-	
-	/*
 	int monitor = GetCurrentMonitor();
-	SetTargetFPS(GetMonitorRefreshRate(monitor));	
-	int ww = GetMonitorWidth(monitor);
-	int wh = GetMonitorHeight(monitor);
-	InitWindow(ww, wh, "Milk Editor");
-	HideCursor();
-	*/
-	
 	int ww = 1920;
 	int wh = 1080;
 	int fps = 60;
@@ -90,12 +74,11 @@ int main () {
 		wh = 1200;
 		fps = 60;
 	} else if(window_flags & WINDOW_FLAG_C) {
-		ww = 1920;
-		wh = 1080;
-		fps = 60;
+		SetTargetFPS(monitor);
+		ww = GetMonitorWidth(monitor);
+		wh = GetMonitorHeight(monitor);
 	}
 
-	int monitor = GetCurrentMonitor();
 	InitWindow(ww, wh, "Milky Mapper");
 	SetTargetFPS(fps);	
 	HideCursor();
@@ -146,9 +129,10 @@ int main () {
 	
 	// Dropdown menus
 	int TAB_FILE_ACTIVE = 0;
-	bool TAB_EDIT = false;
+	bool FILE_TAB_EDIT = false;
 
 	int EDIT_TAB_ACTIVE = 0;
+	bool EDIT_TAB_EDIT = false;
 	
 	int dm_open_active = 0;
 	bool dm_open_edit = false;	
@@ -187,7 +171,7 @@ int main () {
 	while (!WindowShouldClose()) {
 		// Update
 		cursor.on_ui = false;
-		if(fileDialogState.itemFocused && fileDialogState.windowActive || TAB_EDIT == true) cursor.on_ui = true;
+		if(fileDialogState.itemFocused && fileDialogState.windowActive || FILE_TAB_EDIT == true) cursor.on_ui = true;
        
 		if(fileDialogState.SelectFilePressed) {
             // Load level file(if supported extension)
@@ -291,11 +275,6 @@ int main () {
 		if(IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_O)) fileDialogState.windowActive = true;
 	
 		if(_editor_state == MAIN && !(cursor.state_flags & C_CHAR_MODE)) {	
-			/*
-			if(IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_S)) SAVE_PROMPT = true;
-			else if(IsKeyUp(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_W)) TilemapWrite(&tilemap, fileNameToSave, 0);
-			*/
-		
 			if(IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_S)) SAVE_PROMPT = true;
 			else if(IsKeyUp(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_W)) {
 				if(strcmp(fileNameToSave, "")) {
@@ -308,13 +287,6 @@ int main () {
 		GuiWindowFileDialog(&fileDialogState);
 		
 		if(NEW_FILE) {
-			/*
-			DrawRectangleRec((Rectangle){400, 400, 800, 300}, GetColor(GuiGetStyle(DEFAULT, TEXT_COLOR_DISABLED)));
-			GuiValueBox((Rectangle){500, 500, 100, 50}, "cols: ", &new_w, 16, 2048, new_input == COLS);
-			GuiValueBox((Rectangle){500, 550, 100, 50}, "rows: ", &new_h, 16, 2048, new_input == ROWS);
-			GuiTextBox((Rectangle){500, 600, 100, 50}, fileNameToSave, 512, new_input == NAME);
-			*/
-
             GuiDMPropertyList((Rectangle){(ww - 180)/2, (wh - 280)/2, 180, 280}, new_file_props, SIZEOF(new_file_props), &new_focus, &new_scroll);
 
 			if(new_file_props[2].value.vbool != true) {
@@ -373,12 +345,12 @@ int main () {
 
         if(GuiDropdownBox(FILE_OPTION_REC,
 		   "#01#FILE;#08#NEW;#03#OPEN;#02#SAVE",
-		   &TAB_FILE_ACTIVE, TAB_EDIT)) {
+		   &TAB_FILE_ACTIVE, FILE_TAB_EDIT)) {
 			
-			TAB_EDIT = !TAB_EDIT;
+			FILE_TAB_EDIT = !FILE_TAB_EDIT;
 		}
 
-		if(TAB_EDIT) {
+		if(FILE_TAB_EDIT) {
 			cursor.ui_cooldown = 10;
 			cursor.on_ui = true;
 		

@@ -45,15 +45,6 @@ void TilemapUpdateSprites(Tilemap *tilemap) {
 }
 
 void DrawTiles(Tilemap *tilemap) {
-	/*
-	for(u_int16_t i = 0; i < tilemap->area; i++) {
-		u_int16_t c = i % tilemap->width;
-		u_int16_t r = i / tilemap->width;
-		
-		GetDrawTile(tilemap, tilemap->mapData[i], (Coords){c, r}, i);
-	}
-	*/
-
 	u_int16_t frame_w = (1920 / scaled_tile_size) + 4;
 	u_int16_t frame_h = (1080 / scaled_tile_size) + 4;
 	
