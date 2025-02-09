@@ -336,48 +336,10 @@ int main () {
 		
 		// Dropdown menus
 		GuiUnlock();
-		//GuiSetStyle(DROPDOWNBOX, TEXT_PADDING, 4);
-		//GuiSetStyle(DROPDOWNBOX, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT);
 		GuiSetStyle(BUTTON, TEXT_PADDING, 4);
 		GuiSetStyle(BUTTON, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT);
 		
 		// FILE...
-		/*
-        if(GuiDropdownBox(FILE_OPTION_REC,
-		   "#01#FILE;#08#NEW;#03#OPEN;#02#SAVE",
-		   &TAB_FILE_ACTIVE, FILE_TAB_EDIT)) {
-			
-			FILE_TAB_EDIT = !FILE_TAB_EDIT;
-		}
-
-
-		if(FILE_TAB_EDIT) {
-			cursor.ui_cooldown = 10;
-			cursor.on_ui = true;
-		
-			if(CheckCollisionPointRec(GetMousePosition(), open_opt)) {
-				if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-					fileDialogState.windowActive = true;
-				}
-			}
-
-			if(CheckCollisionPointRec(GetMousePosition(), fnew_opt)) {
-				if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-					NEW_FILE = true;
-					new_input = 0;
-					new_file_props[2].value.vbool = true;
-				}
-			}
-
-			if(CheckCollisionPointRec(GetMousePosition(), save_opt)) {
-				if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-					SAVE_PROMPT = true;		
-				}
-			}
-		}  
-		*/
-
-
 		if(GuiButton(FILE_OPTION_REC, "#01#FILE")) {
 			FILE_TAB_EDIT = ! FILE_TAB_EDIT;
 		}
