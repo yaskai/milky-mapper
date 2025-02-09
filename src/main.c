@@ -392,10 +392,12 @@ int main () {
 			}
 
 			if(GuiButton(undo_opt, "UNDO")) {
+				if(pTilemap->action_index > 0) UndoAction(pTilemap, &pTilemap->actions[pTilemap->action_index]);
 				EDIT_TAB_EDIT = false;	
 			}
 
 			if(GuiButton(redo_opt, "REDO")) {
+				if(pTilemap->action_index < pTilemap->action_count) RedoAction(pTilemap, &pTilemap->actions[pTilemap->action_index] + 1);
 				EDIT_TAB_EDIT = false;	
 			}
 			
@@ -410,7 +412,7 @@ int main () {
 		GuiSetStyle(BUTTON, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
 		GuiSetStyle(BUTTON, TEXT_PADDING, 0);
 
-		if(CheckCollisionPointRec(GetMousePosition(), FILE_OPTION_REC)) {
+		if(CheckCollisionPointRec(GetMousePosition(), FILE_OPTION_REC) || CheckCollisionPointRec(GetMousePosition(), EDIT_OPTION_REC)) {
 			cursor.on_ui = true;
 			cursor.ui_cooldown = 10;
 		};
