@@ -152,6 +152,10 @@ int main () {
 	Rectangle save_opt = (Rectangle){FILE_OPTION_REC.x, 
 		FILE_OPTION_REC.y + (FILE_OPTION_REC.height * 3),
 		FILE_OPTION_REC.width, FILE_OPTION_REC.height};
+
+	Rectangle exit_opt = (Rectangle){FILE_OPTION_REC.x, 
+		FILE_OPTION_REC.y + (FILE_OPTION_REC.height * 4),
+		FILE_OPTION_REC.width, FILE_OPTION_REC.height};
 	
 	Rectangle resize_opt = (Rectangle){EDIT_OPTION_REC.x, 
 		EDIT_OPTION_REC.y + (EDIT_OPTION_REC.height * 1),
@@ -365,9 +369,13 @@ int main () {
 				FILE_TAB_EDIT = false;
 			}
 
+			if(GuiButton(exit_opt, "#159#EXIT")) {
+				break;
+			}
+
 			if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 				if(!CheckCollisionPointRec(GetMousePosition(),
-					(Rectangle){FILE_OPTION_REC.x, FILE_OPTION_REC.y, FILE_OPTION_REC.width, FILE_OPTION_REC.height * 4})) {
+					(Rectangle){FILE_OPTION_REC.x, FILE_OPTION_REC.y, FILE_OPTION_REC.width, FILE_OPTION_REC.height * 5})) {
 					FILE_TAB_EDIT = false;
 				}
 			}
@@ -382,7 +390,7 @@ int main () {
 			cursor.ui_cooldown = 10;
 			cursor.on_ui = true;
 
-			if(GuiButton(resize_opt, "RESIZE")) {
+			if(GuiButton(resize_opt, "#33#RESIZE")) {
 				if(_editor_state == MAIN) {
 					new_file_props[2].value.vbool = true;
 					RESIZE = true;
@@ -391,19 +399,19 @@ int main () {
 				EDIT_TAB_EDIT = false;	
 			}
 
-			if(GuiButton(undo_opt, "UNDO")) {
+			if(GuiButton(undo_opt, "#56#UNDO")) {
 				if(pTilemap->action_index > 0) UndoAction(pTilemap, &pTilemap->actions[pTilemap->action_index]);
-				EDIT_TAB_EDIT = false;	
+				//EDIT_TAB_EDIT = false;	
 			}
 
-			if(GuiButton(redo_opt, "REDO")) {
+			if(GuiButton(redo_opt, "#57#REDO")) {
 				if(pTilemap->action_index < pTilemap->action_count) RedoAction(pTilemap, &pTilemap->actions[pTilemap->action_index] + 1);
-				EDIT_TAB_EDIT = false;	
+				if(pTilemap->action_index == pTilemap->action_count) EDIT_TAB_EDIT = false;	
 			}
 			
 			if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 				if(!CheckCollisionPointRec(GetMousePosition(),
-					(Rectangle){EDIT_OPTION_REC.x, EDIT_OPTION_REC.y, EDIT_OPTION_REC.width, EDIT_OPTION_REC.height * 3})) {
+					(Rectangle){EDIT_OPTION_REC.x, EDIT_OPTION_REC.y, EDIT_OPTION_REC.width, EDIT_OPTION_REC.height * 4})) {
 					EDIT_TAB_EDIT = false;
 				}
 			}
