@@ -85,6 +85,10 @@ int main () {
 
 	SearchAndSetResourceDir("resources");
 	GuiLoadStyleLavanda();
+	GuiLoadStyleJungle();
+
+	bool exit_window = false;
+	bool exit_requested = false;
 
 	Spritesheet tile_sheet = MakeSpritesheet(64, 64, LoadTexture("tileset00.png"));
 
@@ -116,9 +120,9 @@ int main () {
 	fileDialogState.windowBounds = (Rectangle){ww * 0.25f, wh * 0.25f, 1000, 700};
 
 	// Button recs
-	Rectangle TOOL_PENCIL_REC = { 1860, 100, 40, 40 };
-	Rectangle TOOL_SELECT_REC = { 1860, 150, 40, 40 };
-	Rectangle TOOL_ERASER_REC = { 1860, 200, 40, 40 };
+	Rectangle TOOL_PENCIL_REC = { ww - 60, 100, 40, 40 };
+	Rectangle TOOL_SELECT_REC = { ww - 60, 150, 40, 40 };
+	Rectangle TOOL_ERASER_REC = { ww - 60, 200, 40, 40 };
 	Rectangle FILE_OPTION_REC = { 0, 0, 100, 30 };
 	Rectangle EDIT_OPTION_REC = { 100, 0, 100, 30 };
 
@@ -185,8 +189,7 @@ int main () {
 
 	SetGridColor(GetColor(GuiGetStyle(DEFAULT, TEXT_COLOR_DISABLED)));
 
-	while (!WindowShouldClose()) {
-		// Update
+	while(!WindowShouldClose()) {
 		cursor.on_ui = false;
 		if(fileDialogState.itemFocused && fileDialogState.windowActive) cursor.on_ui = true;
        
@@ -204,7 +207,7 @@ int main () {
         }
 
 		if(_editor_state == MAIN) {
-			// Check if hovering buttons
+			// Check if hovering tool buttons
 			for(int i = 0; i < 4; i++) {
 				if(CheckCollisionPointRec(GetMousePosition(), button_recs[i])) {
 					cursor.on_ui = true;
@@ -300,6 +303,11 @@ int main () {
 				new_file_props[2].value.vbool = 0;
 
 				strcpy(fileNameToSave, "");
+			}
+
+			if(IsKeyDown(KEY_ESCAPE)) {
+				NEW_FILE = false;	
+				new_file_props[2].value.vbool = 0;
 			}
 		}
 
