@@ -1,4 +1,7 @@
-## Supported Platforms
+# Milky Mapper
+A 2D tilemap level editor written in C using raylib
+
+# Supported Platforms
 * Windows
 * Linux
 * MacOS
