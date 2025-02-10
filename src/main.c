@@ -82,10 +82,11 @@ int main () {
 	InitWindow(ww, wh, "Milky Mapper");
 	SetTargetFPS(fps);	
 	HideCursor();
+	SetExitKey(KEY_F4);
 
 	SearchAndSetResourceDir("resources");
 	GuiLoadStyleLavanda();
-	GuiLoadStyleJungle();
+	//GuiLoadStyleJungle();
 
 	bool exit_window = false;
 	bool exit_requested = false;
@@ -488,6 +489,7 @@ void DrawHelpText(int x, int y) {
 	GuiDrawText("CTRL + O, OPEN", (Rectangle){x + 500, y + (32 * 2), 500, 32}, 0, WHITE);
 	GuiDrawText("CTRL + S, SAVE AS", (Rectangle){x + 500, y + (32 * 3), 500, 32}, 0, WHITE);
 	GuiDrawText("CTRL + R, RESIZE", (Rectangle){x + 500, y + (32 * 4), 500, 32}, 0, WHITE);
+	GuiDrawText("F4, QUIT", (Rectangle){x + 500, y + (32 * 5), 500, 32}, 0, WHITE);
 	
 	GuiSetStyle(DEFAULT, TEXT_SIZE, 15);
 }

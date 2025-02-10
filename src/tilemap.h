@@ -32,9 +32,9 @@ enum TILE_CHARS : char {
 	TILE_EMPTY	 = '0',
 	TILE_BLOCK 	 = '1',
 	TILE_PLAYER  = '2',
-	TILE_ENEMY0  = '4',
-	TILE_ENEMY1  = '5',
-	TILE_DOOR	 = '6'
+	TILE_ENEMY0  = '3',
+	TILE_ENEMY1  = '4',
+	TILE_DOOR	 = '5'
 };
 
 typedef struct {
